@@ -1,6 +1,8 @@
 package com.training.bank_app_back.core.services.v1;
 
+import com.training.bank_app_back.core.mapper.AccountMapper;
 import com.training.bank_app_back.core.dto.request.TransactionFilter;
+import com.training.bank_app_back.core.dto.AccountDto;
 import com.training.bank_app_back.core.entities.Account;
 import com.training.bank_app_back.core.entities.Transaction;
 import com.training.bank_app_back.core.repositories.AccountRepo;
@@ -8,34 +10,42 @@ import com.training.bank_app_back.core.repositories.TransactionRepo;
 import com.training.bank_app_back.core.services.v1.interfaces.AccountService;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.List;
 @Service
 public class AccountServiceImp implements AccountService {
     private final AccountRepo accountRepo;
     private final TransactionRepo transactionRepo;
-    public AccountServiceImp(AccountRepo accountRepo ,TransactionRepo transactionRepo) {
+    private final AccountMapper accountMapper ;
+    public AccountServiceImp(AccountRepo accountRepo ,TransactionRepo transactionRepo,AccountMapper accountMapper) {
         this.accountRepo = accountRepo;
         this.transactionRepo = transactionRepo;
+        this.accountMapper = accountMapper;
     }
     @Override
-    public List<Account> getAllAccounts() {
-        return accountRepo.findAll();
+    public List<AccountDto> getAllAccounts() {
+        List<Account> accounts = accountRepo.findAll();
+
+        return accountMapper.toDtoList(accounts);
     }
 
     @Override
-    public Account getAccountById(Long id) {
-        return accountRepo.findById(id).orElse(null);
+    public AccountDto getAccountById(Long id) {
+        Account account = accountRepo.findById(id).orElse(null);
+        if(account==null)
+            return null;
+        return accountMapper.toDto(account);
     }
 
     @Override
-    public Account saveAccount(Account account) {
-        return accountRepo.save(account);
+    public AccountDto saveAccount(Account account) {
+        Account accountSaved =accountRepo.save(account);
+        return accountMapper.toDto(accountSaved);
     }
 
     @Override
-    public Account updateAccount(Account account) {
-        return accountRepo.save(account);
+    public AccountDto updateAccount(Account account) {
+        Account accountSaved =accountRepo.save(account);
+        return accountMapper.toDto(accountSaved);
     }
 
     @Override

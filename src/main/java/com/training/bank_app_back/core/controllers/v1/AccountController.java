@@ -1,7 +1,7 @@
 package com.training.bank_app_back.core.controllers.v1;
 
 
-import com.training.bank_app_back.core.entities.Account;
+import com.training.bank_app_back.core.dto.AccountDto;
 import com.training.bank_app_back.core.services.v1.interfaces.AccountService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +18,7 @@ public class AccountController {
         this.accountService = accountService;
     }
     @GetMapping("")
-    public ResponseEntity<List<Account>> getAllAccounts(){
+    public ResponseEntity<List<AccountDto>> getAllAccounts(){
         return ResponseEntity.ok(accountService.getAllAccounts());
     }
 }
